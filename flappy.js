@@ -10,7 +10,11 @@ let birdY, birdV, pipes, score, game, gameOverFlag;
 function resetGame() {
     birdY = canvas.height / 2 - BIRD_SIZE / 2;
     birdV = 0;
-    pipes = [{ x: canvas.width + 60, h: randomHeight() }];
+    pipes = [];
+    // 최초 파이프 여러 개 생성
+    for (let i = 0; i < 3; i++) {
+        pipes.push({ x: canvas.width + i * 160, h: randomHeight(), passed: false });
+    }
     score = 0;
     gameOverFlag = false;
     draw();
@@ -60,11 +64,11 @@ function update() {
     // Move pipes
     pipes.forEach(pipe => pipe.x -= 2);
     // Add new pipe
-    if (pipes[pipes.length-1].x < canvas.width - 180) {
-        pipes.push({ x: canvas.width, h: randomHeight() });
+    if (pipes[pipes.length-1].x < canvas.width - 160) {
+        pipes.push({ x: canvas.width, h: randomHeight(), passed: false });
     }
     // Remove off-screen pipes
-    if (pipes[0].x < -PIPE_WIDTH) pipes.shift();
+    if (pipes.length > 0 && pipes[0].x < -PIPE_WIDTH) pipes.shift();
 
     // Collision detection
     pipes.forEach(pipe => {
